@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     phoneNumber: { type: String, unique: true },
     email: { type: String, unique: true },
     password: String,
+    reminders: [mongoose.Types.ObjectId]
   },
   {
     collection: "User",
