@@ -9,6 +9,14 @@ const jwtSecret = "fn34fb5y4bgu54gb45ybg4y5ryth43ugbru34ytgv3yu5vt";
 app.use(express.json());
 app.use(cors());
 
+const twilio = require('twilio');
+const accountSid = 'ACf2a255488e507b16467ba06629db84e8';
+const authToken = 'a6e5754c1a57d0084e5a9649a583d78a';
+
+const client = twilio(accountSid, authToken);
+const server_num = '+18338669587';
+//sendMessage('+15202514006', 'twillio test');
+
 const port = 80;
 require("./models/user");
 
@@ -120,6 +128,27 @@ app.post("/homeData", async (req, res) => {
     console.log("Error at /username/TODO");
   }
 });
+
+app.post('/reminder/enter', async(req,res)=>{
+  /*
+  this takes in a task, and enters it into the database, however, the object id's still need to be found out
+  */
+  var newTask = new Reminder(req.body);
+  res.end("task created");
+
+  //TODO
+
+});
+app.post('/user/search', asynce(req,res))
+function sendMessage(phoneNumber, textBody){
+  client.messages
+    .create({
+        body: textBody,
+        from: server_num,
+        to: phoneNumber
+    })
+    .then(message => console.log(message.sid))
+}
 
 app.listen(port, () => {
   console.log(`http://localhost:${80}`);
