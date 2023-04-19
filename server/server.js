@@ -133,13 +133,46 @@ app.post('/reminder/enter', async(req,res)=>{
   /*
   this takes in a task, and enters it into the database, however, the object id's still need to be found out
   */
-  var newTask = new Reminder(req.body);
+ let tempReminder = req.body;
+ var newTask = new Reminder(tempReminder);
+
+ try{
+  let message = await newTask.save();
+ } catch (error){
+  console.log("error" + error);
+ }
+  
   res.end("task created");
 
   //TODO
 
 });
-app.post('/user/search', asynce(req,res))
+app.post('/user/search/:keyword', async(req,res)=>{
+
+  /*
+  This part will take in a username keyword and create a search for users, and send those users with their _id value for future things
+  */
+  let keyWord = req.params.keyword;
+
+  let p1 = User.find({name:{$regex:keyWord}}).exec();
+  p1.then( (results) => { 
+    outarr = new Array();
+
+    for(let i = 0; i < results.length; i++){
+
+      tempObj = {name: results[i].username, id: results[i]._id}
+      outarr.push(tempObj);
+    }
+    res.end( JSON.stringify(outarr) );
+  }).catch( (error) => {
+    console.log(error);
+    res.end('FAIL');
+  });
+
+
+
+
+});
 function sendMessage(phoneNumber, textBody){
   client.messages
     .create({
